@@ -11,7 +11,7 @@
     font-size: 16px;
     --Dark-Blue: #2b3945;
     /*(Dark Mode Elements)*/
-    --Very-Dark-Blue: #202c37;
+    --Very-Dark-Blue-bg: #202c37;
     /*(Dark Mode Background)*/
     --Very-Dark-Blue: #111517;
     /*(Light Mode Text)*/
@@ -91,4 +91,31 @@
 
 .siwtch-theme span i {
     cursor: pointer;
+}
+
+h5 {
+    font-weight: 800;
+}
+
+.country-info {
+    margin: 1.9rem 0 0.8rem;
+    line-height: 0.7rem;
+}
+
+.country-info span {
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.country-info p {
+    font-weight: 300;
+    font-size: 1rem;
+}
+
+.scale {
+    transition: all ease 1s;
+}
+
+.scale:hover {
+    transform: scale(1.1);
 }

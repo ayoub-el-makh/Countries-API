@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
         integrity="sha512-Avb2QiuDEEvB4bZJYdft2mNjVShBftLdPG8FJ0V7irTLQ8Uo0qcPxh4Plq7G5tGm0rU+1SPhVotteLpBERwTkw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <script defer src="JavaScript/script.js"></script>
+    <script defer src="JavaScript/script.js" type="module"></script>
     <title>Countries</title>
 </head>
 
@@ -25,7 +25,7 @@
     <div class="container-fluid">
         <header class="d-flex justify-content-between align-items-center shadow-sm px-5 py-3 mb-5  bg-body rounded">
             <h1 class="fw-bold">Where in the world?</h1>
-            <div class="siwtch-theme fw-bold">
+            <div class="siwtch-theme fw-bold" id="siwtch-theme">
                 <span><i class="fa-regular fa-sun"></i> Light Mode</span>
             </div>
         </header>
@@ -51,7 +51,7 @@
                     </select>
                 </div>
             </div>
-            <div id="cards" class="row mt-5 d-flex justify-content-between">
+            <div id="cards" class="row mt-5 d-flex flex-wrap gap-5 justify-content-center">
             </div>
         </main>
     </div>
