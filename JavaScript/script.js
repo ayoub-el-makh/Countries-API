@@ -1,5 +1,9 @@
 let cards = document.getElementById('cards');
 let siwtchTheme = document.querySelector('#siwtch-theme');
+let scrollUp = document.getElementById('scroll');
+let searchIcon = document.querySelector('.fa-search');
+let searchInput = document.querySelector('#searchInput');
+let speekIcon = document.querySelector('.fa-microphone');
 const darkMode = {
     true:
     {
@@ -11,6 +15,9 @@ const darkMode = {
         i: "color:white",
         selectOption: "background-color: var(--Dark-Blue);",
         input: "background-color:var(--Dark-Blue);color:white;",
+        scrollImg: "images/computer-mouse-light.png",
+        footerbg: "background-color: var(--Dark-Blue)!important;color: white;",
+        github: "color: white;",
     },
     false: {
         icon: '<span><i class="fa-regular fa-sun"></i> Light Mode</span>',
@@ -21,6 +28,9 @@ const darkMode = {
         i: "color:black;",
         selectOption: "background-color: white;",
         input: "color:black;",
+        scrollImg: "images/computer-mouse-dark.png",
+        footerbg: "background-color: white!important;color: black;",
+        github: "color: black;",
     }
 };
 // function to fetch data from api
@@ -29,14 +39,9 @@ async function getData() {
     return data;
 };
 
-// function to display fetched data as cards
-async function displayData() {
-    const data = await getData();
-    const region = data.map((el) => el.region).filter((el, index, arr) => arr.indexOf(el) === index);
-    console.log(region);
-    displayRegion(region);
+function countries20(data) {
     let html = "";
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 20; i++) {
         html += `
         <div class="scale card px-0 col-md-3 shadow" style="width: 15rem; cursor: pointer;border:none;" title='${data[i].name}'>
             <div style="min-height:25%;">
@@ -54,6 +59,14 @@ async function displayData() {
         `;
     }
     cards.innerHTML = html;
+}
+
+// function to display fetched data as cards
+async function displayData() {
+    const data = await getData();
+    const region = data.map((el) => el.region).filter((el, index, arr) => arr.indexOf(el) === index);
+    displayRegion(region);
+    countries20(data);
     getTeme();
 };
 
@@ -70,7 +83,6 @@ function getTeme() {
     if (localStorage.getItem('mode') !== null) {
         teme = JSON.parse(localStorage.getItem('mode'));
         changeColor();
-        console.log(JSON.parse(localStorage.getItem('mode')));
     } else {
         teme = true;
     }
@@ -100,7 +112,10 @@ function changeColor() {
         document.querySelector('select').classList.remove('selectOption');
     } else {
         document.querySelector('select').classList.add('selectOption');
-    }
+    };
+    scrollUp.setAttribute('src', change.scrollImg);
+    document.querySelector('footer').style.cssText = change.footerbg;
+    document.querySelector('.github a').style.cssText = change.github;
 }
 
 siwtchTheme.addEventListener('click', () => {
@@ -108,3 +123,76 @@ siwtchTheme.addEventListener('click', () => {
     changeColor();
     localStorage.setItem('mode', JSON.stringify(teme));
 });
+
+//Scroll back
+scrollUp.addEventListener('click', function () {
+    scroll({ top: 0 });
+});
+
+//Searching by Country name and Adding the microphone feature to search and creating footer section
+searchIcon.addEventListener('click', () => {
+    searchInput.focus();
+});
+
+speekIcon.addEventListener('click', () => {
+    let recognization = new webkitSpeechRecognition('');
+    recognization.onresult = (e) => {
+        let transcript = e.results[0][0].transcript;
+        searchInput.value = transcript;
+        search(transcript);
+    }
+    recognization.onstart = () => {
+        searchInput.placeholder = "Listening...";
+    }
+    recognization.onspeechend = () => {
+        searchInput.placeholder = 'Search for a country...';
+    }
+    recognization.start();
+});
+
+async function search(e) {
+    const data = await getData();
+    let v ;
+    if (typeof e === "object"){
+        v = e.target.value;
+    }else{
+        v = e;
+    }
+    let country;
+    if (v === '') {
+        countries20(data);
+    } else {
+        country = data.filter((el) => el.name.toLowerCase().includes(v.toLowerCase()));
+        let html = "";
+        for (let i of country) {
+            html += `
+        <div class="scale card px-0 col-md-3 shadow" style="width: 15rem; cursor: pointer;border:none;" title='${i.name}'>
+            <div style="min-height:25%;">
+                <img class="card-img-top m-0" style="height:150px;" src="${i.flags.png}"  alt="Card image cap">
+            </div>
+            <div class="card-body">
+                    <h5 class="card-text fw-bold">${i.name}<h5>
+                <div class="country-info">
+                    <p><span>Population:</span> ${i.population.toLocaleString()}</p>
+                    <p><span>Region:</span> ${i.region}</p>
+                    <p><span>Capital:</span> ${i.capital || "unknown"}</p>
+                </div>
+            </div>
+        </div>
+        `;
+        }
+        cards.innerHTML = html;
+    }
+    getTeme();
+};
+searchInput.addEventListener('input', search);
+
+// add dateCopyright;
+
+document.querySelector('#Copyright').innerHTML = `Copyright &copy; <br/ >${new Date().getFullYear()}`;
+
+if (window.innerWidth == 375) {
+    document.querySelector('.filter').classList.add('mt-3');
+    document.querySelector('h1').style.fontSize = "1rem";
+    document.querySelector('header').classList.remove('px-5');
+}

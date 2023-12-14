@@ -5,6 +5,7 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'Nunito Sans', sans-serif;
+    scroll-behavior: smooth;
 }
 
 :root {
@@ -94,7 +95,7 @@
     font-weight: 600;
 }
 
-#siwtch-theme span i {
+i {
     cursor: pointer;
 }
 
@@ -127,4 +128,15 @@ h5 {
 
 .scale:hover {
     transform: scale(1.1);
+}
+
+.github a {
+    text-decoration: none;
+    color: white;
+    font-size: 3rem;
+}
+
+footer div img {
+    width: 35%;
+    cursor: pointer;
 }
