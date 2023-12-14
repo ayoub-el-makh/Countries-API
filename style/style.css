@@ -23,6 +23,10 @@
     /* (Dark Mode Text & Light Mode Elements)*/
 }
 
+.input::placeholder {
+    color: white !important;
+}
+
 ::-webkit-scrollbar {
     width: 0.6rem;
     background-color: var(--Dark-Gray);
@@ -79,6 +83,7 @@
     outline: none;
     font-weight: 600;
     cursor: pointer;
+    border-radius: 0.3rem;
 }
 
 .selectpicker option:first-child {
@@ -89,8 +94,12 @@
     font-weight: 600;
 }
 
-.siwtch-theme span i {
+#siwtch-theme span i {
     cursor: pointer;
+}
+
+.selectOption option {
+    background-color: var(--Dark-Blue);
 }
 
 h5 {
