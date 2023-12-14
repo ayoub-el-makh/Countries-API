@@ -4,6 +4,7 @@ let scrollUp = document.getElementById('scroll');
 let searchIcon = document.querySelector('.fa-search');
 let searchInput = document.querySelector('#searchInput');
 let speekIcon = document.querySelector('.fa-microphone');
+let FilterRegion = document.querySelector('#region');
 const darkMode = {
     true:
     {
@@ -152,17 +153,17 @@ speekIcon.addEventListener('click', () => {
 
 async function search(e) {
     const data = await getData();
-    let v ;
-    if (typeof e === "object"){
-        v = e.target.value;
-    }else{
-        v = e;
+    let value;
+    if (typeof e === "object") {
+        value = e.target.value;
+    } else {
+        value = e;
     }
     let country;
-    if (v === '') {
+    if (value === '') {
         countries20(data);
     } else {
-        country = data.filter((el) => el.name.toLowerCase().includes(v.toLowerCase()));
+        country = data.filter((el) => el.name.toLowerCase().includes(value.toLowerCase()));
         let html = "";
         for (let i of country) {
             html += `
@@ -196,3 +197,36 @@ if (window.innerWidth == 375) {
     document.querySelector('h1').style.fontSize = "1rem";
     document.querySelector('header').classList.remove('px-5');
 }
+
+// add filter by region
+
+async function filterByRegion(e) {
+    const data = await getData();
+    if (e.target.value === "") {
+        countries20(data);
+    }else{
+        const filterData = data.filter((el) => el.region === e.target.value);
+        let html = "";
+        for (let i of filterData) {
+            html += `
+        <div class="scale card px-0 col-md-3 shadow" style="width: 15rem; cursor: pointer;border:none;" title='${i.name}'>
+            <div style="min-height:25%;">
+                <img class="card-img-top m-0" style="height:150px;" src="${i.flags.png}"  alt="Card image cap">
+            </div>
+            <div class="card-body">
+                    <h5 class="card-text fw-bold">${i.name}<h5>
+                <div class="country-info">
+                    <p><span>Population:</span> ${i.population.toLocaleString()}</p>
+                    <p><span>Region:</span> ${i.region}</p>
+                    <p><span>Capital:</span> ${i.capital || "unknown"}</p>
+                </div>
+            </div>
+        </div>
+        `;
+        }
+        cards.innerHTML = html;
+    }
+    getTeme();
+}
+
+FilterRegion.addEventListener('change', filterByRegion);
