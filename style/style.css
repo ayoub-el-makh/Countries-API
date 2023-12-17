@@ -141,8 +141,7 @@ footer div img {
     cursor: pointer;
 }
 
-
-body{
+body {
     position: relative;
 }
 
@@ -150,7 +149,7 @@ body{
     width: 85%;
     position: absolute;
     left: 50%;
-    transform: translateX(-50%) ;
+    transform: translateX(-50%);
     scale: 0;
     z-index: 999;
     display: flex;
@@ -176,7 +175,7 @@ body{
     object-fit: cover;
 }
 
-.bordres-country{
+.bordres-country {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
@@ -184,28 +183,28 @@ body{
     width: 100%;
     gap: 2;
 }
-.bordres-country div{
+
+.bordres-country div {
     border: 1px solid #9ca3af;
 }
 
-.record{
+.record {
     color: red !important;
 }
 
-#close-icon{
+#close-icon {
     position: absolute;
-    top:-2rem;
+    top: -2rem;
     right: -1rem;
     font-size: 1.5rem;
 }
 
-.light{
+.light {
     background-color: #ffffff;
     color: #000000;
 }
 
-
-.dark{
+.dark {
     background-color: var(--Very-Dark-Blue);
     color: #fff;
 }

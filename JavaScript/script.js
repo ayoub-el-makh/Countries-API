@@ -20,7 +20,7 @@ const darkMode = {
         scrollImg: "images/computer-mouse-light.png",
         footerbg: "background-color: var(--Dark-Blue)!important;color: white;",
         github: "color: white;",
-        closeInfoCountry : '<i class="fa-solid fa-circle-xmark"></i>'
+        closeInfoCountry: '<i class="fa-solid fa-circle-xmark"></i>'
     },
     false: {
         icon: '<span><i class="fa-regular fa-sun"></i> Light Mode</span>',
@@ -34,7 +34,7 @@ const darkMode = {
         scrollImg: "images/computer-mouse-dark.png",
         footerbg: "background-color: white!important;color: black;",
         github: "color: black;",
-        closeInfoCountry : '<i class="fa-regular fa-circle-xmark"></i>'
+        closeInfoCountry: '<i class="fa-regular fa-circle-xmark"></i>'
     }
 };
 // function to fetch data from api
@@ -89,7 +89,7 @@ function getTeme() {
         teme = JSON.parse(localStorage.getItem('mode'));
         changeColor();
     } else {
-        teme = true;
+        teme = false;
     }
 }
 
@@ -122,12 +122,17 @@ function changeColor() {
     document.querySelector('footer').style.cssText = change.footerbg;
     document.querySelector('.github a').style.cssText = change.github;
     document.querySelector('#close-icon').innerHTML = change.closeInfoCountry;
-    if(teme){
+    if (teme) {
         document.querySelector('#contry-info').classList.remove("light");
         document.querySelector('#contry-info').classList.add("dark");
-    }else{
+        document.querySelector('header a h1').classList.add("text-white");
+        document.querySelector('header a h1').classList.remove("text-dark");
+
+    } else {
         document.querySelector('#contry-info').classList.remove("dark");
         document.querySelector('#contry-info').classList.add("light");
+        document.querySelector('header a h1').classList.remove("text-white");
+        document.querySelector('header a h1').classList.add("text-dark");
     }
 }
 
@@ -247,7 +252,7 @@ async function filterByRegion(e) {
 
 FilterRegion.addEventListener('change', filterByRegion);
 
-// add country Info
+// add country Info to card details
 
 function init(data) {
     let cardDiv = document.querySelectorAll('.scale');
@@ -255,7 +260,7 @@ function init(data) {
     cardDiv.forEach((el) => {
         el.addEventListener('click', (e) => {
             const countryClicked = data.find((el) => el.name === e.currentTarget.dataset.name);
-            contryInfo.style.cssText =`
+            contryInfo.style.cssText = `
             scale: 1;
             top: ${scrollY + 150}px;
             `;
@@ -284,9 +289,9 @@ function init(data) {
                 </div>
             </div>
             `;
-            document.querySelector('#close-icon').addEventListener('click', ()=>{
-                contryInfo.style.cssText = 'scale:0;'
-            })
+            document.querySelector('#close-icon').addEventListener('click', () => {
+                contryInfo.style.cssText = 'scale:0;';
+            });
             if (window.innerWidth == 375) {
                 document.querySelector('.alert-image').style.cssText = `
                 flex-basis: 100%;
@@ -297,8 +302,8 @@ function init(data) {
                 display: flex;
                 flex-direction: column;
                 `;
-            }
-            
+            };
         });
     });
-}
+};
+
