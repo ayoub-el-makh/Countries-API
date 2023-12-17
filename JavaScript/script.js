@@ -5,6 +5,7 @@ let searchIcon = document.querySelector('.fa-search');
 let searchInput = document.querySelector('#searchInput');
 let speekIcon = document.querySelector('.fa-microphone');
 let FilterRegion = document.querySelector('#region');
+let contryInfo = document.querySelector('#contry-info');
 const darkMode = {
     true:
     {
@@ -19,6 +20,7 @@ const darkMode = {
         scrollImg: "images/computer-mouse-light.png",
         footerbg: "background-color: var(--Dark-Blue)!important;color: white;",
         github: "color: white;",
+        closeInfoCountry : '<i class="fa-solid fa-circle-xmark"></i>'
     },
     false: {
         icon: '<span><i class="fa-regular fa-sun"></i> Light Mode</span>',
@@ -32,6 +34,7 @@ const darkMode = {
         scrollImg: "images/computer-mouse-dark.png",
         footerbg: "background-color: white!important;color: black;",
         github: "color: black;",
+        closeInfoCountry : '<i class="fa-regular fa-circle-xmark"></i>'
     }
 };
 // function to fetch data from api
@@ -44,7 +47,7 @@ function countries20(data) {
     let html = "";
     for (let i = 0; i < 20; i++) {
         html += `
-        <div class="scale card px-0 col-md-3 shadow" style="width: 15rem; cursor: pointer;border:none;" title='${data[i].name}'>
+        <div class="scale card px-0 col-md-3 shadow" data-name="${data[i].name}" style="width: 15rem; cursor: pointer;border:none;" title='${data[i].name}'>
             <div style="min-height:25%;">
                 <img class="card-img-top m-0" style="height:150px;" src="${data[i].flags.png}"  alt="Card image cap">
             </div>
@@ -60,6 +63,7 @@ function countries20(data) {
         `;
     }
     cards.innerHTML = html;
+    init(data);
 }
 
 // function to display fetched data as cards
@@ -93,8 +97,8 @@ function changeColor() {
     let change = darkMode[teme];
     siwtchTheme.innerHTML = change.icon;
     let card = document.querySelectorAll('.card');
-    let iconSelect = document.querySelectorAll('i.fa.fa');
-    for (let el of iconSelect) {
+    let iconInput = document.querySelectorAll('i.fa');
+    for (let el of iconInput) {
         el.style.cssText = change.i;
     }
     document.body.style.cssText = change.bodyColor;
@@ -117,6 +121,14 @@ function changeColor() {
     scrollUp.setAttribute('src', change.scrollImg);
     document.querySelector('footer').style.cssText = change.footerbg;
     document.querySelector('.github a').style.cssText = change.github;
+    document.querySelector('#close-icon').innerHTML = change.closeInfoCountry;
+    if(teme){
+        document.querySelector('#contry-info').classList.remove("light");
+        document.querySelector('#contry-info').classList.add("dark");
+    }else{
+        document.querySelector('#contry-info').classList.remove("dark");
+        document.querySelector('#contry-info').classList.add("light");
+    }
 }
 
 siwtchTheme.addEventListener('click', () => {
@@ -141,9 +153,11 @@ speekIcon.addEventListener('click', () => {
         let transcript = e.results[0][0].transcript;
         searchInput.value = transcript;
         search(transcript);
+        document.querySelector('i.fa-microphone').classList.remove("record");
     }
     recognization.onstart = () => {
         searchInput.placeholder = "Listening...";
+        document.querySelector('i.fa-microphone').classList.add("record");
     }
     recognization.onspeechend = () => {
         searchInput.placeholder = 'Search for a country...';
@@ -167,7 +181,7 @@ async function search(e) {
         let html = "";
         for (let i of country) {
             html += `
-        <div class="scale card px-0 col-md-3 shadow" style="width: 15rem; cursor: pointer;border:none;" title='${i.name}'>
+        <div class="scale card px-0 col-md-3 shadow" data-name="${i.name}" style="width: 15rem; cursor: pointer;border:none;" title='${i.name}'>
             <div style="min-height:25%;">
                 <img class="card-img-top m-0" style="height:150px;" src="${i.flags.png}"  alt="Card image cap">
             </div>
@@ -185,6 +199,7 @@ async function search(e) {
         cards.innerHTML = html;
     }
     getTeme();
+    init(data);
 };
 searchInput.addEventListener('input', search);
 
@@ -204,12 +219,12 @@ async function filterByRegion(e) {
     const data = await getData();
     if (e.target.value === "") {
         countries20(data);
-    }else{
+    } else {
         const filterData = data.filter((el) => el.region === e.target.value);
         let html = "";
         for (let i of filterData) {
             html += `
-        <div class="scale card px-0 col-md-3 shadow" style="width: 15rem; cursor: pointer;border:none;" title='${i.name}'>
+        <div class="scale card px-0 col-md-3 shadow" data-name="${i.name}" style="width: 15rem; cursor: pointer;border:none;" title='${i.name}'>
             <div style="min-height:25%;">
                 <img class="card-img-top m-0" style="height:150px;" src="${i.flags.png}"  alt="Card image cap">
             </div>
@@ -227,6 +242,63 @@ async function filterByRegion(e) {
         cards.innerHTML = html;
     }
     getTeme();
+    init(data);
 }
 
 FilterRegion.addEventListener('change', filterByRegion);
+
+// add country Info
+
+function init(data) {
+    let cardDiv = document.querySelectorAll('.scale');
+    let contryInfo_1 = document.querySelector('#contry-info-1');
+    cardDiv.forEach((el) => {
+        el.addEventListener('click', (e) => {
+            const countryClicked = data.find((el) => el.name === e.currentTarget.dataset.name);
+            contryInfo.style.cssText =`
+            scale: 1;
+            top: ${scrollY + 150}px;
+            `;
+            contryInfo_1.innerHTML = `
+            <div class="alert-image shadow d-flex justify-content-between align-items-center">
+                <img style="width:100%;" src="${countryClicked.flags.png}"  alt="Card image cap">
+            </div>
+            <div class="p-3">
+                <h5 class="card-text fw-bold">${countryClicked.name}</h5>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <p><span class="fw-bold">Native Name:</span> ${countryClicked.nativeName.toLocaleString()}</p>
+                        <p><span class="fw-bold">Population:</span> ${countryClicked.population.toLocaleString()}</p>
+                        <p><span class="fw-bold">Region:</span> ${countryClicked.region}</p>
+                        <p><span class="fw-bold">Sub Region: </span>${countryClicked.subregion}</p>
+                        <p><span class="fw-bold">Capital:</span> ${countryClicked.capital || "unknown"}</p>
+                    </div>
+                    <div class="col-sm-6">
+                        <p><span class="fw-bold">Top Level Domain: </span> ${countryClicked.topLevelDomain.toLocaleString()}</p>
+                        <p><span class="fw-bold">Currencies: </span> ${countryClicked.currencies ? countryClicked.currencies[0].name : "unknown"}</p>
+                        <p><span class="fw-bold">Languages:</span> ${countryClicked.languages.map((el) => el.name).join(", ")}</p>
+                    </div>
+                    <div class="mt-5  d-flex w-100">
+                        <div class="d-flex align-items-center"><span class="fw-bold">Border Countries:</span><div class="bordres-country"><div class="p-2">${countryClicked.borders ? countryClicked.borders.join("</div><div class='p-2'>") : "unknown"}</div></div>
+                    </div>
+                </div>
+            </div>
+            `;
+            document.querySelector('#close-icon').addEventListener('click', ()=>{
+                contryInfo.style.cssText = 'scale:0;'
+            })
+            if (window.innerWidth == 375) {
+                document.querySelector('.alert-image').style.cssText = `
+                flex-basis: 100%;
+                margin:0 0 1rem;
+                margin-right: 0px;
+                `;
+                contryInfo_1.style.cssText += `
+                display: flex;
+                flex-direction: column;
+                `;
+            }
+            
+        });
+    });
+}
